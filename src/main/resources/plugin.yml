@@ -4,7 +4,8 @@ main: me.voten.worldeminecraft.Main
 prefix: Wordle
 authors: [ Voten641 ]
 description:
-  Plugin allows you to play Wordle in Minecraft, avaible languages: [ Polish, English ]
+  "Plugin allows you to play Wordle in Minecraft, avaible languages: [ Polish, English ]
+  thanks for word list to: @louanben(twitter)"
 website: voten641.github.com
 commands:
   wordle:
