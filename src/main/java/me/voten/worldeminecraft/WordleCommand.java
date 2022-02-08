@@ -35,6 +35,9 @@ public class WordleCommand implements CommandExecutor {
                     }
                     p.sendMessage("§cReset");
                 }
+                if(args[0].equals("getword")){
+                    p.sendMessage("§e"+Main.word);
+                }
                 return false;
             }
         }
