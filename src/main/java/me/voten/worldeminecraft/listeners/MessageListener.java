@@ -36,7 +36,7 @@ public class MessageListener implements Listener {
                 }
                 else uc.setColor(c, 'e');
             }else uc.setColor(c, '8');
-            end += "§"+uc.getColor(c)+"["+c+"]";
+            end += "§"+uc.getColor(c)+"§l["+c+"]";
         }
         ScoreboardManager m = Bukkit.getScoreboardManager();
         Scoreboard b = m.getNewScoreboard();
@@ -68,11 +68,10 @@ public class MessageListener implements Listener {
                 continue;
             }
         }
-        System.out.println(ssc1);
-        Score sc1 = o.getScore(ssc1);
-        Score sc2 = o.getScore(ssc2);
-        Score sc3 = o.getScore(ssc3);
-        Score sc4 = o.getScore(ssc4);
+        Score sc1 = o.getScore(ssc4);
+        Score sc2 = o.getScore(ssc3);
+        Score sc3 = o.getScore(ssc2);
+        Score sc4 = o.getScore(ssc1);
         sc1.setScore(1);
         sc2.setScore(2);
         sc3.setScore(3);
