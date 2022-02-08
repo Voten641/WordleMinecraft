@@ -1,0 +1,9 @@
+#Avaible: [english]
+language: 'english'
+winMessage: "&aYou Won in &e %attemp &aattemp" # %attemp
+loseMessage: "&aYou lose"
+wrongWord: "&cWrong word"
+scoreboardTitle: "&aWordle"
+playedToday: "&cYou have played today"
+startGame: "&aGame started, type one more time /wordle to pause game"
+pauseGame: "&aGame paused"
