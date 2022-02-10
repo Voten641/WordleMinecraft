@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class UserClass {
 
@@ -22,21 +23,36 @@ public class UserClass {
 
     public UserClass(Player pl){
         p = pl;
-        List<Character> selectedaplhabet = new ArrayList<>();
+        List<Character> universalaplhabet = Arrays.asList('Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K',
+                'L','Z','X','C','V','B','N','M');
         List<Character> rualphabet = Arrays.asList('А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н',
                 'О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','ъ','Ы','ь','Э','Ю','Я');
-        List<Character> alphabet = Arrays.asList('Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K',
-                'L','Z','X','C','V','B','N','M');
+        List<Character> fralphabet = Arrays.asList('À','Â','Æ','Ç','É','È','Ê','Ë','Î','Ï','Ô','Œ','Ù','Û','Ü','Ÿ');
+        List<Character> plalphabet = Arrays.asList('Ą','Ć','Ę','Ł','Ń','Ó','Ś','Ż','Ź');
+        List<Character> spalphabet = Arrays.asList('Ñ','ú','ü','ó','í','é','á');
+        List<Character> koalphabet = Arrays.asList('ㅂ','ㅈ','ㄷ','ㄱ','ㅅ','ㅛ','ㅕ','ㅑ','ㅐ','ㅔ','ㅁ','ㄴ','ㅇ','ㄹ'
+                ,'ㅎ','ㅗ','ㅓ','ㅏ','ㅣ','ㅋ','ㅌ','ㅊ','ㅍ','ㅠ','ㅜ','ㅡ');
         switch (Main.lang){
-            case "english":
             case "french":
-                selectedaplhabet = alphabet;
+                universalaplhabet.addAll(fralphabet);
                 break;
             case "russian":
-                selectedaplhabet = rualphabet;
+                universalaplhabet.addAll(rualphabet);
+                break;
+            case "polish":
+                universalaplhabet.addAll(plalphabet);
+                break;
+            case "spanish":
+                universalaplhabet.addAll(spalphabet);
+                break;
+            case "korean":
+                universalaplhabet.clear();
+                universalaplhabet.addAll(koalphabet);
+                break;
         }
-        for(Character c : selectedaplhabet){
-            map.put(c, 'f');
+        universalaplhabet = universalaplhabet.stream().distinct().collect(Collectors.toList());
+        for(Character c : universalaplhabet){
+            map.put(Character.toUpperCase(c), 'f');
         }
         userList.add(this);
         File messagesFolder = new File(Main.getPlugin(Main.class).getDataFolder(), "playerData");

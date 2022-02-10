@@ -1,4 +1,4 @@
-#Avaible: [english, french]
+#Avaible: [english, french, korean, spanish]
 language: 'english'
 winMessage: "&aYou Won in &e %attemp &aattemp" # %attemp
 loseMessage: "&aYou lose"
