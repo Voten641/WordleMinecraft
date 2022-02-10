@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,6 +18,7 @@ public final class Main extends JavaPlugin {
     public static String word = null;
     public static ArrayList<String> listOfLines = new ArrayList<>();
     private static LocalDate day;
+    public static String lang = "english";
 
     @Override
     public void onEnable() {
@@ -25,12 +27,14 @@ public final class Main extends JavaPlugin {
         FileConfiguration config = this.getConfig();
         getServer().getPluginManager().registerEvents(new MessageListener(), this);
         getCommand("wordle").setExecutor(new WordleCommand());
-        InputStream in = getClass().getResourceAsStream("/WordList/" + config.getString("language") + ".txt");
+        lang = config.getString("language");
+        InputStream in = getClass().getResourceAsStream("/WordList/" + lang + ".txt");
         try {
-            BufferedReader bufReader = new BufferedReader(new InputStreamReader(in));
+            assert in != null;
+            BufferedReader bufReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             String line = bufReader.readLine();
             while(line != null){
-                listOfLines.add(line);
+                listOfLines.add(line.toUpperCase());
                 line = bufReader.readLine();
             }
             bufReader.close();
@@ -40,6 +44,7 @@ public final class Main extends JavaPlugin {
         Random random = new Random();
         int index = random.nextInt(listOfLines.size());
         word = listOfLines.get(index);
+        System.out.println(word);
         for(Player p : Bukkit.getOnlinePlayers()){
             new UserClass(p);
         }

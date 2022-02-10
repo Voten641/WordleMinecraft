@@ -22,8 +22,20 @@ public class UserClass {
 
     public UserClass(Player pl){
         p = pl;
-        List<Character> alphabet = Arrays.asList('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
-        for(Character c : alphabet){
+        List<Character> selectedaplhabet = new ArrayList<>();
+        List<Character> rualphabet = Arrays.asList('А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н',
+                'О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','ъ','Ы','ь','Э','Ю','Я');
+        List<Character> alphabet = Arrays.asList('Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K',
+                'L','Z','X','C','V','B','N','M');
+        switch (Main.lang){
+            case "english":
+            case "french":
+                selectedaplhabet = alphabet;
+                break;
+            case "russian":
+                selectedaplhabet = rualphabet;
+        }
+        for(Character c : selectedaplhabet){
             map.put(c, 'f');
         }
         userList.add(this);

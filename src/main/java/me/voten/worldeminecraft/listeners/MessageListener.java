@@ -9,6 +9,8 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class MessageListener implements Listener {
@@ -20,7 +22,7 @@ public class MessageListener implements Listener {
         }
         e.setCancelled(true);
         UserClass uc = UserClass.getByPlayer(e.getPlayer());
-        String message = e.getMessage().toLowerCase();
+        String message = e.getMessage().toUpperCase();
         if(!Main.listOfLines.contains(message)){
             e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("wrongWord").replace('&', '§'));
             return;
@@ -44,38 +46,28 @@ public class MessageListener implements Listener {
         Objective o = b.registerNewObjective("Gold", "");
         o.setDisplaySlot(DisplaySlot.SIDEBAR);
         o.setDisplayName(Main.getPlugin(Main.class).getConfig().getString("scoreboardTitle").replace('&', '§'));
-        String ssc1 = "";
-        String ssc2 = "";
-        String ssc3 = "";
-        String ssc4 = "";
-        int i = 0;
-        for(Map.Entry<Character, Character> ma : uc.getMap().entrySet()){
-            if(i < 8){
-                ssc1 += "§"+ma.getValue()+"["+ma.getKey()+"]";
-                i++;
-                continue;
-            }if(i < 16){
-                ssc2 += "§"+ma.getValue()+"["+ma.getKey()+"]";
-                i++;
-                continue;
-            }if (i< 24){
-                ssc3 += "§"+ma.getValue()+"["+ma.getKey()+"]";
-                i++;
-                continue;
+        List<String> ssc = new ArrayList<>();
+        String ssct = "";
+        int count = 0;
+        for (Map.Entry<Character,Character> ma : uc.getMap().entrySet()){
+            if(count<7){
+                ssct += "§"+ma.getValue()+"["+ma.getKey()+"]";
+                count++;
             }else{
-                ssc4 += "§"+ma.getValue()+"["+ma.getKey()+"]";
-                i++;
-                continue;
+                ssct += "§"+ma.getValue()+"["+ma.getKey()+"]";
+                ssc.add(ssct);
+                count = 0;
+                ssct = "";
             }
         }
-        Score sc1 = o.getScore(ssc4);
-        Score sc2 = o.getScore(ssc3);
-        Score sc3 = o.getScore(ssc2);
-        Score sc4 = o.getScore(ssc1);
-        sc1.setScore(1);
-        sc2.setScore(2);
-        sc3.setScore(3);
-        sc4.setScore(4);
+        ssc.add(ssct);
+        List<Score> sc = new ArrayList<>();
+        for(String s : ssc){
+            sc.add(o.getScore(s));
+        }
+        for( int i = 0; i < sc.size(); i++){
+            sc.get(i).setScore(sc.size()-i);
+        }
 
         e.getPlayer().setScoreboard(b);
         e.getPlayer().sendMessage(end);
