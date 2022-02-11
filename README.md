@@ -2,16 +2,22 @@
 <br/>Plugin allows to play Wordle on chat in game, new word is generating every day based on server time
 
 <br/>**Information**
-<br/>Languages Supported:  English, French(@louanben)
-<br/>If you have list of words in other languages than english and french you can send it to me and i'll add this to my plugin and tag you
+<br/>Languages Supported:  English, French(@louanben), Korean, Spanish
+<br/>If you have list of words in other languages you can send it to me and i'll add this to my plugin and tag you
 
 <br/>**Please report all bugs and errors to me!**
 
-<br/>Commands:
+<br/>**Commands:**
 <br/>
 <br/>* /wordle - play or pause the game
 <br/>* /wordle getword (permission: "wordle.admin")- shows what word is currently
 <br/>* /wordle resetplayerdata (permission: "wordle.admin")- reset all players data
+
+<br/>**Placeholders:**
+<br/>
+<br/>* %wordle_wonGames%
+<br/>* %wordle_iscurrentlyplaying%
+<br/>* %wordle_todaywon%
 
 
 <br/>Screenshots:
