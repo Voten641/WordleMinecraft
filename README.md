@@ -2,7 +2,7 @@
 <br/>Plugin allows to play Wordle on chat in game, new word is generating every day based on server time
 
 <br/>**Information**
-<br/>Languages Supported:  English, French(@louanben)
+<br/>Languages Supported:  English, French(@louanben), Korean, Spanish
 <br/>If you have list of words in other languages than english and french you can send it to me and i'll add this to my plugin and tag you
 
 <br/>**Please report all bugs and errors to me!**
