@@ -13,7 +13,7 @@
 <br/>* /wordle getword (permission: "wordle.admin")- shows what word is currently
 <br/>* /wordle resetplayerdata (permission: "wordle.admin")- reset all players data
 
-<br/>**Commands:**
+<br/>**Placeholders:**
 <br/>
 <br/>* %wordle_wonGames%
 <br/>* %wordle_iscurrentlyplaying%
