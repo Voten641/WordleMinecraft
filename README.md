@@ -7,11 +7,17 @@
 
 <br/>**Please report all bugs and errors to me!**
 
-<br/>Commands:
+<br/>**Commands:**
 <br/>
 <br/>* /wordle - play or pause the game
 <br/>* /wordle getword (permission: "wordle.admin")- shows what word is currently
 <br/>* /wordle resetplayerdata (permission: "wordle.admin")- reset all players data
+
+<br/>**Commands:**
+<br/>
+<br/>* %wordle_wonGames%
+<br/>* %wordle_iscurrentlyplaying%
+<br/>* %wordle_todaywon%
 
 
 <br/>Screenshots:
