@@ -16,7 +16,9 @@ public class UserClass {
 
     private OfflinePlayer p;
     private HashMap<Character, Character> map = Maps.newHashMap();
-    public static List<UserClass> userList = new ArrayList<>();
+    public static Map<UUID, UserClass> userByUuid = Maps.newHashMap();
+    public static Map<String, UserClass> userByName = Maps.newHashMap();
+    public static Map<OfflinePlayer, UserClass> userByPlayer = Maps.newHashMap();
     private Integer attemp = 0;
     private boolean todayWon = false;
     private Integer wonGames = 0;
@@ -56,7 +58,9 @@ public class UserClass {
         for(Character c : universalaplhabet){
             map.put(Character.toUpperCase(c), 'f');
         }
-        userList.add(this);
+        userByName.put(p.getName(), this);
+        userByUuid.put(p.getUniqueId(), this);
+        userByPlayer.put(p, this);
         file = new File(Main.getPlugin(Main.class).getDataFolder(), "playerData/" + p.getUniqueId()+".yml");
         if(!file.exists()){
             try {
@@ -115,10 +119,16 @@ public class UserClass {
         todayWon = false;
     }
 
-    public static UserClass getByPlayer(Player pl){
-        for(UserClass uc : userList){
-            if(uc.getPlayer().equals(pl)) return uc;
-        }
+    public static UserClass getByPlayer(OfflinePlayer pl){
+        if(userByPlayer.containsKey(pl)) return userByPlayer.get(pl);
+        return null;
+    }
+    public static UserClass getByUUID(UUID uuid){
+        if(userByUuid.containsKey(uuid)) return userByUuid.get(uuid);
+        return null;
+    }
+    public static UserClass getByName(String name){
+        if(userByName.containsKey(name)) return userByName.get(name);
         return null;
     }
 

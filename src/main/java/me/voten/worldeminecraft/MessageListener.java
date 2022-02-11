@@ -106,7 +106,7 @@ public class MessageListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
-        if(!UserClass.userList.contains(e.getPlayer()))
+        if(!UserClass.userByUuid.containsKey(e.getPlayer().getUniqueId()))
         new UserClass(e.getPlayer());
     }
 }

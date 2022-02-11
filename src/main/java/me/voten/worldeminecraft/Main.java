@@ -61,8 +61,8 @@ public final class Main extends JavaPlugin {
                     int index = random.nextInt(listOfLines.size());
                     word = listOfLines.get(index);
                     day = LocalDate.now();
-                    for(UserClass uc : UserClass.userList){
-                        uc.newDay();
+                    for(Map.Entry<UUID, UserClass> uc : UserClass.userByUuid.entrySet()){
+                        uc.getValue().newDay();
                     }
                 }
             }

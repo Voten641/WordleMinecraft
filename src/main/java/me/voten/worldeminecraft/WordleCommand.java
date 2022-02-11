@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class WordleCommand implements CommandExecutor {
 
@@ -19,12 +21,12 @@ public class WordleCommand implements CommandExecutor {
         Player p = (Player) sender;
         if(p.hasPermission("wordle.admin")){
             if(args.length > 0){
-                if(args[0].equals("resetplayerdata")){
-                    for(UserClass uc : UserClass.userList){
-                        uc.resetWonGames();
+                if(args[0].equalsIgnoreCase("resetplayerdata")){
+                    for(Map.Entry<UUID, UserClass> uc : UserClass.userByUuid.entrySet()){
+                        uc.getValue().resetWonGames();
                     }
                     File messagesFolder = new File(Main.getPlugin(Main.class).getDataFolder(), "playerData");
-                    List<File> fileList = Arrays.asList(messagesFolder.listFiles());
+                    File[] fileList = messagesFolder.listFiles();
                     for(File f : fileList){
                         f.delete();
                         try {
@@ -35,7 +37,7 @@ public class WordleCommand implements CommandExecutor {
                     }
                     p.sendMessage("§cReset");
                 }
-                if(args[0].equals("getword")){
+                if(args[0].equalsIgnoreCase("getword")){
                     p.sendMessage("§e"+Main.word);
                 }
                 return false;
