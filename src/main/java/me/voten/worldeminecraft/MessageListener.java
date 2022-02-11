@@ -1,16 +1,11 @@
 package me.voten.worldeminecraft;
 
 import com.google.common.collect.Maps;
-import me.voten.worldeminecraft.Main;
-import me.voten.worldeminecraft.UserClass;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.scoreboard.*;
 
 import java.util.*;
