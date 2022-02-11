@@ -43,8 +43,7 @@ public class PlaceholderClass extends PlaceholderExpansion {
             return String.valueOf(YamlConfiguration.loadConfiguration(file).getInt("wonGames"));
         }if(params.equalsIgnoreCase("isCurrentlyPlaying")){
             if(player.isOnline()){
-                if(Main.players.contains(player.getPlayer()))return "true";
-                else return "false";
+                return String.valueOf(UserClass.getByPlayer(player.getPlayer()).isPlaying());
             }
             else{
                 return "§cPlayer is not Online";

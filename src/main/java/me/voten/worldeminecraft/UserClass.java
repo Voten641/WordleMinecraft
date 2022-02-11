@@ -1,7 +1,6 @@
 package me.voten.worldeminecraft;
 
 import com.google.common.collect.Maps;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,14 +13,15 @@ import java.util.stream.Collectors;
 
 public class UserClass {
 
-    private OfflinePlayer p;
-    private HashMap<Character, Character> map = Maps.newHashMap();
+    private final OfflinePlayer p;
+    private boolean curPlaying = false;
+    private final HashMap<Character, Character> map = Maps.newHashMap();
     public static Map<UUID, UserClass> userByUuid = Maps.newHashMap();
     public static Map<String, UserClass> userByName = Maps.newHashMap();
     public static Map<OfflinePlayer, UserClass> userByPlayer = Maps.newHashMap();
     private Integer attemp = 0;
     private boolean todayWon = false;
-    private Integer wonGames = 0;
+    private Integer wonGames;
     private static File file;
     private static FileConfiguration config;
 
@@ -73,6 +73,13 @@ public class UserClass {
         wonGames = config.getInt("wonGames");
     }
 
+    public boolean isPlaying(){
+        return curPlaying;
+    }
+    public void setPlaying(boolean b){
+        curPlaying = b;
+    }
+
     public Integer getWonGames(){
         return wonGames;
     }
@@ -93,7 +100,7 @@ public class UserClass {
             map.replace(m.getKey(), 'f');
         }
         todayWon = true;
-        Main.players.remove(p);
+        curPlaying = false;
     }
 
     public boolean isTodayWon(){

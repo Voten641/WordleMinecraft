@@ -27,6 +27,7 @@ public class WordleCommand implements CommandExecutor {
                     }
                     File messagesFolder = new File(Main.getPlugin(Main.class).getDataFolder(), "playerData");
                     File[] fileList = messagesFolder.listFiles();
+                    assert fileList != null;
                     for(File f : fileList){
                         f.delete();
                         try {
@@ -43,17 +44,18 @@ public class WordleCommand implements CommandExecutor {
                 return false;
             }
         }
-        if(Main.players.contains(p)){
+        UserClass uc = UserClass.getByPlayer(p);
+        assert uc != null;
+        if(uc.isPlaying()){
             p.sendMessage(Main.getPlugin(Main.class).getConfig().getString("pauseGame").replace('&', '§'));
-            Main.players.remove(p);
+            uc.setPlaying(false);
             return false;
         }else{
-            UserClass uc = UserClass.getByPlayer(p);
             if(uc.isTodayWon()){
                 p.sendMessage(Main.getPlugin(Main.class).getConfig().getString("playedToday").replace('&', '§'));
                 return true;
             }else {
-                Main.players.add(p);
+                uc.setPlaying(true);
                 p.sendMessage(Main.getPlugin(Main.class).getConfig().getString("startGame").replace('&', '§'));
             }
         }

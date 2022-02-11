@@ -12,7 +12,6 @@ import java.util.*;
 
 public final class Main extends JavaPlugin {
 
-    public static ArrayList<Player> players = new ArrayList<Player>();
     public static String word = null;
     public static ArrayList<String> listOfLines = new ArrayList<>();
     private static LocalDate day;

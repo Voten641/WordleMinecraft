@@ -14,9 +14,9 @@ public class MessageListener implements Listener {
 
     @EventHandler
     public void onMessage(PlayerChatEvent e){
-        if(!Main.players.contains(e.getPlayer())){
+        UserClass uc = UserClass.getByPlayer(e.getPlayer());
+        if(!uc.isPlaying()){
             if(e.getMessage().toUpperCase().contains(Main.word.toUpperCase())){
-                UserClass uc = UserClass.getByPlayer(e.getPlayer());
                 if (uc.isTodayWon()) {
                     e.setCancelled(true);
                     e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("cancelWord").replace('&', '§'));
@@ -25,7 +25,6 @@ public class MessageListener implements Listener {
             return;
         }
         e.setCancelled(true);
-        UserClass uc = UserClass.getByPlayer(e.getPlayer());
         String message = e.getMessage().toUpperCase();
         if(!Main.listOfLines.contains(message)){
             e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("wrongWord").replace('&', '§'));
