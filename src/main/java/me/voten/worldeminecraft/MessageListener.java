@@ -1,23 +1,32 @@
-package me.voten.worldeminecraft.listeners;
+package me.voten.worldeminecraft;
 
+import com.google.common.collect.Maps;
 import me.voten.worldeminecraft.Main;
 import me.voten.worldeminecraft.UserClass;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.scoreboard.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MessageListener implements Listener {
 
     @EventHandler
     public void onMessage(PlayerChatEvent e){
         if(!Main.players.contains(e.getPlayer())){
+            if(e.getMessage().toUpperCase().contains(Main.word.toUpperCase())){
+                UserClass uc = UserClass.getByPlayer(e.getPlayer());
+                if (uc.isTodayWon()) {
+                    e.setCancelled(true);
+                    e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("cancelWord").replace('&', '§'));
+                }
+              }
             return;
         }
         e.setCancelled(true);
@@ -76,6 +85,7 @@ public class MessageListener implements Listener {
             uc.addWonGame();
             e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("winMessage").replace('&', '§').replace("%attemp", uc.getAttemp()+""));
             uc.resetAll();
+            setupTop();
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), new Runnable() {
                 public void run() {
                     e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
@@ -93,6 +103,10 @@ public class MessageListener implements Listener {
             return;
         }
 
+    }
+
+    public void setupTop(){
+        HashMap<Integer, UserClass> top = Maps.newHashMap();
     }
 
     @EventHandler

@@ -1,6 +1,8 @@
 package me.voten.worldeminecraft;
 
 import com.google.common.collect.Maps;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -12,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class UserClass {
 
-    private Player p = null;
+    private OfflinePlayer p;
     private HashMap<Character, Character> map = Maps.newHashMap();
     public static List<UserClass> userList = new ArrayList<>();
     private Integer attemp = 0;
@@ -55,10 +57,6 @@ public class UserClass {
             map.put(Character.toUpperCase(c), 'f');
         }
         userList.add(this);
-        File messagesFolder = new File(Main.getPlugin(Main.class).getDataFolder(), "playerData");
-        if(!messagesFolder.exists()) {
-            messagesFolder.mkdirs();
-        }
         file = new File(Main.getPlugin(Main.class).getDataFolder(), "playerData/" + p.getUniqueId()+".yml");
         if(!file.exists()){
             try {
@@ -109,8 +107,12 @@ public class UserClass {
         attemp++;
     }
 
-    public Player getPlayer(){
+    public OfflinePlayer getPlayer(){
         return p;
+    }
+
+    public void newDay(){
+        todayWon = false;
     }
 
     public static UserClass getByPlayer(Player pl){

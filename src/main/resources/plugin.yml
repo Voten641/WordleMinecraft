@@ -7,5 +7,7 @@ description:
   "Plugin allows you to play Wordle in Minecraft, avaible languages: [ Polish, English ]
   thanks for word list to: @louanben(twitter)"
 website: voten641.github.com
+softdepend:
+  - PlaceholderAPI
 commands:
   wordle:

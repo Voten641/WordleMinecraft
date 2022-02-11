@@ -1,6 +1,5 @@
 package me.voten.worldeminecraft;
 
-import me.voten.worldeminecraft.listeners.MessageListener;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -9,8 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 public final class Main extends JavaPlugin {
 
@@ -45,8 +43,15 @@ public final class Main extends JavaPlugin {
         int index = random.nextInt(listOfLines.size());
         word = listOfLines.get(index);
         System.out.println(word);
+        File messagesFolder = new File(Main.getPlugin(Main.class).getDataFolder(), "playerData");
+        if(!messagesFolder.exists()) {
+            messagesFolder.mkdirs();
+        }
         for(Player p : Bukkit.getOnlinePlayers()){
             new UserClass(p);
+        }
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
+            new PlaceholderClass(this).register();
         }
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             public void run() {
@@ -56,6 +61,9 @@ public final class Main extends JavaPlugin {
                     int index = random.nextInt(listOfLines.size());
                     word = listOfLines.get(index);
                     day = LocalDate.now();
+                    for(UserClass uc : UserClass.userList){
+                        uc.newDay();
+                    }
                 }
             }
         }, 0, 20*60*5);
