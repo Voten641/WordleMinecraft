@@ -1,9 +1,12 @@
 package me.voten.worldeminecraft;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -25,7 +28,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MessageListener(), this);
         getCommand("wordle").setExecutor(new WordleCommand());
         lang = config.getString("language");
-        InputStream in = getClass().getResourceAsStream("/WordList/" + lang + ".txt");
+        InputStream in = getClass().getResourceAsStream("/WordList/" + lang +".txt");
         try {
             assert in != null;
             BufferedReader bufReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
