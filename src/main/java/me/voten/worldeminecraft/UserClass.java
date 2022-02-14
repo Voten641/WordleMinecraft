@@ -20,7 +20,7 @@ public class UserClass {
     public static Map<UUID, UserClass> userByUuid = Maps.newHashMap();
     public static Map<String, UserClass> userByName = Maps.newHashMap();
     public static Map<OfflinePlayer, UserClass> userByPlayer = Maps.newHashMap();
-    private Integer attemp = 0;
+    private Integer attempt = 0;
     private boolean todayWon = false;
     private Integer wonGames;
     private static File file;
@@ -92,7 +92,7 @@ public class UserClass {
     }
 
     public void resetAll(){
-        attemp = 0;
+        attempt = 0;
         for(Map.Entry<Character, Character> m : map.entrySet()){
             map.replace(m.getKey(), 'f');
         }
@@ -108,11 +108,11 @@ public class UserClass {
         wonGames = 0;
     }
 
-    public Integer getAttemp(){
-        return attemp;
+    public Integer getAttempt(){
+        return attempt;
     }
-    public void addAttemp(){
-        attemp++;
+    public void addAttempt(){
+        attempt++;
     }
 
     public void newDay(){
