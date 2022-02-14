@@ -77,15 +77,15 @@ public class MessageListener implements Listener {
 
         e.getPlayer().setScoreboard(b);
         e.getPlayer().sendMessage(end.toString());
-        uc.addAttemp();
+        uc.addAttempt();
         if(numberofgood == 5){
             uc.addWonGame();
-            e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("winMessage").replace('&', '§').replace("%attemp", uc.getAttemp()+""));
+            e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("winMessage").replace('&', '§').replace("%attempt", uc.getAttempt()+""));
             uc.resetAll();
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
             if(Main.getPlugin(Main.class).getConfig().getBoolean("giveReward")) giveRewards(e.getPlayer());
         }
-        if(uc.getAttemp() == 5){
+        if(uc.getAttempt() == 5){
             e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("loseMessage").replace('&', '§'));
             uc.resetAll();
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
