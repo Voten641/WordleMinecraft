@@ -1,12 +1,12 @@
 package me.voten.worldeminecraft;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Objects;
 
 public class PlaceholderClass extends PlaceholderExpansion {
 
@@ -43,7 +43,7 @@ public class PlaceholderClass extends PlaceholderExpansion {
             return String.valueOf(YamlConfiguration.loadConfiguration(file).getInt("wonGames"));
         }if(params.equalsIgnoreCase("isCurrentlyPlaying")){
             if(player.isOnline()){
-                return String.valueOf(UserClass.getByPlayer(player.getPlayer()).isPlaying());
+                return String.valueOf(Objects.requireNonNull(UserClass.getByPlayer(player.getPlayer())).isPlaying());
             }
             else{
                 return "§cPlayer is not Online";
@@ -51,15 +51,8 @@ public class PlaceholderClass extends PlaceholderExpansion {
         }
         if(params.equalsIgnoreCase("TodayWon")){
             if(UserClass.getByPlayer(player.getPlayer()) != null){
-                return String.valueOf(UserClass.getByPlayer(player.getPlayer()).isTodayWon());
+                return String.valueOf(Objects.requireNonNull(UserClass.getByPlayer(player.getPlayer())).isTodayWon());
             }
-        }
-        return null;
-    }
-
-    public Integer getInt(String s){
-        if(StringUtils.isNumeric(s)){
-            return Integer.parseInt(s);
         }
         return null;
     }

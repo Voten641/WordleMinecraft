@@ -1,11 +1,13 @@
 package me.voten.worldeminecraft;
 
-import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.*;
 
 import java.util.*;
@@ -15,6 +17,7 @@ public class MessageListener implements Listener {
     @EventHandler
     public void onMessage(PlayerChatEvent e){
         UserClass uc = UserClass.getByPlayer(e.getPlayer());
+        assert uc != null;
         if(!uc.isPlaying()){
             if(e.getMessage().toUpperCase().contains(Main.word.toUpperCase())){
                 if (uc.isTodayWon()) {
@@ -30,7 +33,7 @@ public class MessageListener implements Listener {
             e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("wrongWord").replace('&', '§'));
             return;
         }
-        String end = "";
+        StringBuilder end = new StringBuilder();
         int numberofgood = 0;
         for (int i = 0; i < 5; i++){
             Character c = message.charAt(i);
@@ -41,7 +44,7 @@ public class MessageListener implements Listener {
                 }
                 else uc.setColor(c, 'e');
             }else uc.setColor(c, '8');
-            end += "§"+uc.getColor(c)+"§l["+c+"]";
+            end.append("§").append(uc.getColor(c)).append("§l[").append(c).append("]");
         }
         ScoreboardManager m = Bukkit.getScoreboardManager();
         Scoreboard b = m.getNewScoreboard();
@@ -50,20 +53,20 @@ public class MessageListener implements Listener {
         o.setDisplaySlot(DisplaySlot.SIDEBAR);
         o.setDisplayName(Main.getPlugin(Main.class).getConfig().getString("scoreboardTitle").replace('&', '§'));
         List<String> ssc = new ArrayList<>();
-        String ssct = "";
+        StringBuilder ssct = new StringBuilder();
         int count = 0;
         for (Map.Entry<Character,Character> ma : uc.getMap().entrySet()){
             if(count<7){
-                ssct += "§"+ma.getValue()+"["+ma.getKey()+"]";
+                ssct.append("§").append(ma.getValue()).append("[").append(ma.getKey()).append("]");
                 count++;
             }else{
-                ssct += "§"+ma.getValue()+"["+ma.getKey()+"]";
-                ssc.add(ssct);
+                ssct.append("§").append(ma.getValue()).append("[").append(ma.getKey()).append("]");
+                ssc.add(ssct.toString());
                 count = 0;
-                ssct = "";
+                ssct = new StringBuilder();
             }
         }
-        ssc.add(ssct);
+        ssc.add(ssct.toString());
         List<Score> sc = new ArrayList<>();
         for(String s : ssc){
             sc.add(o.getScore(s));
@@ -73,34 +76,32 @@ public class MessageListener implements Listener {
         }
 
         e.getPlayer().setScoreboard(b);
-        e.getPlayer().sendMessage(end);
+        e.getPlayer().sendMessage(end.toString());
         uc.addAttemp();
         if(numberofgood == 5){
             uc.addWonGame();
             e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("winMessage").replace('&', '§').replace("%attemp", uc.getAttemp()+""));
             uc.resetAll();
-            setupTop();
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), new Runnable() {
-                public void run() {
-                    e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-                }
-            }, 20L*5);
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
+            if(Main.getPlugin(Main.class).getConfig().getBoolean("giveReward")) giveRewards(e.getPlayer());
         }
         if(uc.getAttemp() == 5){
             e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("loseMessage").replace('&', '§'));
             uc.resetAll();
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), new Runnable() {
-                public void run() {
-                    e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-                }
-            }, 20L*5);
-            return;
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
         }
 
     }
 
-    public void setupTop(){
-        HashMap<Integer, UserClass> top = Maps.newHashMap();
+    public void giveRewards(Player p) {
+        ConfigurationSection items = Main.getPlugin(Main.class).getConfig().getConfigurationSection("reward");
+        ItemStack it = XMaterial.valueOf(items.getConfigurationSection("ITEM").getString("material").toUpperCase()).parseItem();
+        assert it != null;
+        it.setAmount(Integer.parseInt(items.getConfigurationSection("ITEM").getString("ammount")));
+        p.getInventory().addItem(it);
+        String command = items.getConfigurationSection("COMMAND").getString("command");
+        command = command.replace("%player", p.getName());
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
     }
 
     @EventHandler

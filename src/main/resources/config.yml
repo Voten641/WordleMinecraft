@@ -1,4 +1,4 @@
-#Avaible: [english, french, korean, spanish]
+#Avaible: [english, french, korean, spanish, polish]
 language: 'english'
 winMessage: "&aYou Won in &e %attemp &aattemp" # %attemp
 loseMessage: "&aYou lose"
@@ -8,3 +8,10 @@ playedToday: "&cYou have played today"
 startGame: "&aGame started, type one more time /wordle to pause game"
 pauseGame: "&aGame paused"
 cancelWord: "&cYou cant use this word on chat"
+giveReward: true
+reward:
+  ITEM:
+    material: iron_ingot
+    ammount: 2
+  COMMAND:
+    command: gamemode creative %player

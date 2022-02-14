@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class UserClass {
@@ -64,7 +65,7 @@ public class UserClass {
         file = new File(Main.getPlugin(Main.class).getDataFolder(), "playerData/" + p.getUniqueId()+".yml");
         if(!file.exists()){
             try {
-                file.createNewFile();
+                if(file.createNewFile()) Main.getPlugin(Main.class).getLogger().log(Level.WARNING, "PlayerData File creation failed.");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -78,10 +79,6 @@ public class UserClass {
     }
     public void setPlaying(boolean b){
         curPlaying = b;
-    }
-
-    public Integer getWonGames(){
-        return wonGames;
     }
 
     public void addWonGame(){
@@ -116,10 +113,6 @@ public class UserClass {
     }
     public void addAttemp(){
         attemp++;
-    }
-
-    public OfflinePlayer getPlayer(){
-        return p;
     }
 
     public void newDay(){

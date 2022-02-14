@@ -3,15 +3,13 @@ package me.voten.worldeminecraft;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class WordleCommand implements CommandExecutor {
 
@@ -29,9 +27,9 @@ public class WordleCommand implements CommandExecutor {
                     File[] fileList = messagesFolder.listFiles();
                     assert fileList != null;
                     for(File f : fileList){
-                        f.delete();
+                        if(f.delete()) Main.getPlugin(Main.class).getLogger().log(Level.WARNING, "PlayerData File delete failed.");
                         try {
-                            f.createNewFile();
+                            if(f.createNewFile()) Main.getPlugin(Main.class).getLogger().log(Level.WARNING, "PlayerData File creation failed.");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
