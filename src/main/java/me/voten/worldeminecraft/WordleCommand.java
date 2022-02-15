@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -17,8 +18,8 @@ public class WordleCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(!(sender instanceof Player)) return false;
         Player p = (Player) sender;
-        if(p.hasPermission("wordle.admin")){
-            if(args.length > 0){
+        if(args.length > 0){
+            if(p.hasPermission("wordle.admin")){
                 if(args[0].equalsIgnoreCase("resetplayerdata")){
                     for(Map.Entry<UUID, UserClass> uc : UserClass.userByUuid.entrySet()){
                         uc.getValue().resetWonGames();
@@ -35,11 +36,23 @@ public class WordleCommand implements CommandExecutor {
                         }
                     }
                     p.sendMessage("§cReset");
+                    return false;
                 }
                 if(args[0].equalsIgnoreCase("getword")){
-                    p.sendMessage("§e"+Main.word);
+                    p.sendMessage("§e"+Main.words.toString().substring(1,Main.words.toString().length()-1));
+                    return false;
                 }
-                return false;
+            }
+            if(args[0].equalsIgnoreCase("setlang") && args[1] != null){
+                if (!p.hasPermission("wordle.changelanguage"))return false;
+                if(Arrays.asList("english", "korean", "spanish", "french", "polish").contains(args[1])){
+                    p.sendMessage("lang changed");
+                    UserClass.getByUUID(p.getUniqueId()).setLang(args[1]);
+                    return true;
+                }else{
+                    p.sendMessage("§cAvailiable langs: english, korean, spanish, french, polish");
+                    return true;
+                }
             }
         }
         UserClass uc = UserClass.getByPlayer(p);
@@ -54,6 +67,7 @@ public class WordleCommand implements CommandExecutor {
                 return true;
             }else {
                 uc.setPlaying(true);
+                MessageListener.setSB(p);
                 p.sendMessage(Main.getPlugin(Main.class).getConfig().getString("startGame").replace('&', '§'));
             }
         }

@@ -1,5 +1,6 @@
 package me.voten.worldeminecraft;
 
+import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,8 +15,8 @@ import java.util.logging.Level;
 
 public final class Main extends JavaPlugin {
 
-    public static String word = null;
-    public static ArrayList<String> listOfLines = new ArrayList<>();
+    public static HashMap<String, String> words = Maps.newHashMap();
+    public static HashMap<String, List<String>> allwords = Maps.newHashMap();
     private static LocalDate day;
     public static String lang = "english";
 
@@ -29,29 +30,45 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MessageListener(), this);
         getCommand("wordle").setExecutor(new WordleCommand());
         lang = config.getString("language");
-        List<String> langs = Arrays.asList("english", "polish", "french", "korean","russian", "spanish");
+        List<String> langs = Arrays.asList("english", "polish", "french", "korean", "spanish");
+        for(String s : langs){
+            ArrayList<String> listOfLines = new ArrayList<>();
+            InputStream in = getClass().getResourceAsStream("/WordList/" + s +".txt");
+            try {
+                assert in != null;
+                BufferedReader bufReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+                String line = bufReader.readLine();
+                while(line != null){
+                    listOfLines.add(line.toUpperCase());
+                    line = bufReader.readLine();
+                }
+                bufReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            allwords.put(s, listOfLines);
+            Random random = new Random();
+            int index = random.nextInt(listOfLines.size());
+            words.put(s, listOfLines.get(index));
+            Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
+                LocalDate newDate = LocalDate.now();
+                if(newDate.getDayOfMonth() != day.getDayOfMonth()){
+                    Random random1 = new Random();
+                    int index1 = random1.nextInt(listOfLines.size());
+                    words.put(s, listOfLines.get(index1));
+                    day = LocalDate.now();
+                    for(Map.Entry<UUID, UserClass> uc : UserClass.userByUuid.entrySet()){
+                        uc.getValue().newDay();
+                    }
+                }
+            }, 0, 20*60*5);
+        }
         if(!langs.contains(lang)) {
             getServer().getLogger().log(Level.WARNING, "Lang: " + lang + " doesnt exist.");
             getServer().getLogger().log(Level.WARNING, "Available langs: " + langs);
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        InputStream in = getClass().getResourceAsStream("/WordList/" + lang +".txt");
-        try {
-            assert in != null;
-            BufferedReader bufReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-            String line = bufReader.readLine();
-            while(line != null){
-                listOfLines.add(line.toUpperCase());
-                line = bufReader.readLine();
-            }
-            bufReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Random random = new Random();
-        int index = random.nextInt(listOfLines.size());
-        word = listOfLines.get(index);
         File playerDataFolder = new File(Main.getPlugin(Main.class).getDataFolder(), "playerData");
         if(!playerDataFolder.exists()) {
             if(playerDataFolder.mkdirs()){
@@ -64,18 +81,6 @@ public final class Main extends JavaPlugin {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             new PlaceholderClass(this).register();
         }
-        Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            LocalDate newDate = LocalDate.now();
-            if(newDate.getDayOfMonth() != day.getDayOfMonth()){
-                Random random1 = new Random();
-                int index1 = random1.nextInt(listOfLines.size());
-                word = listOfLines.get(index1);
-                day = LocalDate.now();
-                for(Map.Entry<UUID, UserClass> uc : UserClass.userByUuid.entrySet()){
-                    uc.getValue().newDay();
-                }
-            }
-        }, 0, 20*60*5);
     }
 
     @Override

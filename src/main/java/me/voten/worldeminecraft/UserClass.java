@@ -25,53 +25,68 @@ public class UserClass {
     private Integer wonGames;
     private static File file;
     private static FileConfiguration config;
+    private String lang = Main.lang;
 
     public UserClass(Player pl){
         p = pl;
-        List<Character> universalaplhabet = Arrays.asList('Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K',
-                'L','Z','X','C','V','B','N','M');
-        List<Character> rualphabet = Arrays.asList('А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н',
-                'О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','ъ','Ы','ь','Э','Ю','Я');
-        List<Character> fralphabet = Arrays.asList('À','Â','Æ','Ç','É','È','Ê','Ë','Î','Ï','Ô','Œ','Ù','Û','Ü','Ÿ');
-        List<Character> plalphabet = Arrays.asList('Ą','Ć','Ę','Ł','Ń','Ó','Ś','Ż','Ź');
-        List<Character> spalphabet = Arrays.asList('Ñ','ú','ü','ó','í','é','á');
-        List<Character> koalphabet = Arrays.asList('ㅂ','ㅈ','ㄷ','ㄱ','ㅅ','ㅛ','ㅕ','ㅑ','ㅐ','ㅔ','ㅁ','ㄴ','ㅇ','ㄹ'
-                ,'ㅎ','ㅗ','ㅓ','ㅏ','ㅣ','ㅋ','ㅌ','ㅊ','ㅍ','ㅠ','ㅜ','ㅡ');
-        switch (Main.lang){
-            case "french":
-                universalaplhabet.addAll(fralphabet);
-                break;
-            case "russian":
-                universalaplhabet.addAll(rualphabet);
-                break;
-            case "polish":
-                universalaplhabet.addAll(plalphabet);
-                break;
-            case "spanish":
-                universalaplhabet.addAll(spalphabet);
-                break;
-            case "korean":
-                universalaplhabet.clear();
-                universalaplhabet.addAll(koalphabet);
-                break;
-        }
-        universalaplhabet = universalaplhabet.stream().distinct().collect(Collectors.toList());
-        for(Character c : universalaplhabet){
-            map.put(Character.toUpperCase(c), 'f');
-        }
         userByName.put(p.getName(), this);
         userByUuid.put(p.getUniqueId(), this);
         userByPlayer.put(p, this);
         file = new File(Main.getPlugin(Main.class).getDataFolder(), "playerData/" + p.getUniqueId()+".yml");
         if(!file.exists()){
             try {
-                if(file.createNewFile()) Main.getPlugin(Main.class).getLogger().log(Level.WARNING, "PlayerData File creation failed.");
+                if(!file.createNewFile()) Main.getPlugin(Main.class).getLogger().log(Level.WARNING, "PlayerData File creation failed.");
+                else {
+                    config = YamlConfiguration.loadConfiguration(file);
+                    config.set("wonGames", Main.lang);
+                    config.set("language", Main.lang);
+                    config.save(file);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         config = YamlConfiguration.loadConfiguration(file);
         wonGames = config.getInt("wonGames");
+        if(config.contains("language")) lang = config.getString("language");
+        setupLang();
+    }
+
+    public void setupLang(){
+        map.clear();
+        List<Character> universalaplhabet = Arrays.asList('Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K',
+                'L','Z','X','C','V','B','N','M');
+        List<Character> rualphabet = Arrays.asList('А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н',
+                'О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','ъ','Ы','ь','Э','Ю','Я');
+        List<Character> fralphabet = Arrays.asList('Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K',
+                'L','Z','X','C','V','B','N','M','À','Â','Æ','Ç','É','È','Ê','Ë','Î','Ï','Ô','Œ','Ù','Û','Ü','Ÿ');
+        List<Character> plalphabet = Arrays.asList('Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K',
+                'L','Z','X','C','V','B','N','M','Ą','Ć','Ę','Ł','Ń','Ó','Ś','Ż','Ź');
+        List<Character> spalphabet = Arrays.asList('Q','W','E','R','T','Y','U','I','O','P','A','S','D','F','G','H','J','K',
+                'L','Z','X','C','V','B','N','M','Ñ','ú','ü','ó','í','é','á');
+        List<Character> koalphabet = Arrays.asList('ㅂ','ㅈ','ㄷ','ㄱ','ㅅ','ㅛ','ㅕ','ㅑ','ㅐ','ㅔ','ㅁ','ㄴ','ㅇ','ㄹ'
+                ,'ㅎ','ㅗ','ㅓ','ㅏ','ㅣ','ㅋ','ㅌ','ㅊ','ㅍ','ㅠ','ㅜ','ㅡ');
+        switch (lang){
+            case "french":
+                universalaplhabet = fralphabet;
+                break;
+            case "russian":
+                universalaplhabet = rualphabet;
+                break;
+            case "polish":
+                universalaplhabet = plalphabet;
+                break;
+            case "spanish":
+                universalaplhabet = spalphabet;
+                break;
+            case "korean":
+                universalaplhabet = koalphabet;
+                break;
+        }
+        universalaplhabet = universalaplhabet.stream().distinct().collect(Collectors.toList());
+        for(Character c : universalaplhabet){
+            map.put(Character.toUpperCase(c), 'f');
+        }
     }
 
     public boolean isPlaying(){
@@ -79,6 +94,22 @@ public class UserClass {
     }
     public void setPlaying(boolean b){
         curPlaying = b;
+    }
+
+    public String getLang(){
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+        config.set("language", this.lang);
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        setupLang();
+        MessageListener.setSB(p.getPlayer());
     }
 
     public void addWonGame(){

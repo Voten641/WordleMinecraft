@@ -19,7 +19,7 @@ public class MessageListener implements Listener {
         UserClass uc = UserClass.getByPlayer(e.getPlayer());
         assert uc != null;
         if(!uc.isPlaying()){
-            if(e.getMessage().toUpperCase().contains(Main.word.toUpperCase())){
+            if(e.getMessage().toUpperCase().contains(Main.words.get(uc.getLang()).toUpperCase())){
                 if (uc.isTodayWon()) {
                     e.setCancelled(true);
                     e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("cancelWord").replace('&', '§'));
@@ -29,7 +29,7 @@ public class MessageListener implements Listener {
         }
         e.setCancelled(true);
         String message = e.getMessage().toUpperCase();
-        if(!Main.listOfLines.contains(message)){
+        if(!Main.allwords.get(uc.getLang()).contains(message)){
             e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("wrongWord").replace('&', '§'));
             return;
         }
@@ -37,8 +37,8 @@ public class MessageListener implements Listener {
         int numberofgood = 0;
         for (int i = 0; i < 5; i++){
             Character c = message.charAt(i);
-            if(Main.word.contains(""+c)){
-                if(Main.word.charAt(i) == c) {
+            if(Main.words.get(uc.getLang()).contains(""+c)){
+                if(Main.words.get(uc.getLang()).charAt(i) == c) {
                     uc.setColor(c, 'a');
                     numberofgood++;
                 }
@@ -46,6 +46,24 @@ public class MessageListener implements Listener {
             }else uc.setColor(c, '8');
             end.append("§").append(uc.getColor(c)).append("§l[").append(c).append("]");
         }
+        e.getPlayer().sendMessage(end.toString());
+        uc.addAttempt();
+        if(numberofgood == 5){
+            uc.addWonGame();
+            e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("winMessage").replace('&', '§').replace("%attempt", uc.getAttempt()+""));
+            uc.resetAll();
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
+            if(Main.getPlugin(Main.class).getConfig().getBoolean("giveReward")) giveRewards(e.getPlayer());
+        }
+        if(uc.getAttempt() == 5){
+            e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("loseMessage").replace('&', '§'));
+            uc.resetAll();
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
+        }
+
+    }
+
+    public static void setSB(Player p){
         ScoreboardManager m = Bukkit.getScoreboardManager();
         Scoreboard b = m.getNewScoreboard();
 
@@ -54,6 +72,7 @@ public class MessageListener implements Listener {
         o.setDisplayName(Main.getPlugin(Main.class).getConfig().getString("scoreboardTitle").replace('&', '§'));
         List<String> ssc = new ArrayList<>();
         StringBuilder ssct = new StringBuilder();
+        UserClass uc = UserClass.getByUUID(p.getUniqueId());
         int count = 0;
         for (Map.Entry<Character,Character> ma : uc.getMap().entrySet()){
             if(count<7){
@@ -75,22 +94,7 @@ public class MessageListener implements Listener {
             sc.get(i).setScore(sc.size()-i);
         }
 
-        e.getPlayer().setScoreboard(b);
-        e.getPlayer().sendMessage(end.toString());
-        uc.addAttempt();
-        if(numberofgood == 5){
-            uc.addWonGame();
-            e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("winMessage").replace('&', '§').replace("%attempt", uc.getAttempt()+""));
-            uc.resetAll();
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
-            if(Main.getPlugin(Main.class).getConfig().getBoolean("giveReward")) giveRewards(e.getPlayer());
-        }
-        if(uc.getAttempt() == 5){
-            e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("loseMessage").replace('&', '§'));
-            uc.resetAll();
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
-        }
-
+        p.setScoreboard(b);
     }
 
     public void giveRewards(Player p) {
