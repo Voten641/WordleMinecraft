@@ -12,6 +12,7 @@
 <br/>* /wordle - play or pause the game
 <br/>* /wordle getword (permission: "wordle.admin")- shows what word is currently
 <br/>* /wordle resetplayerdata (permission: "wordle.admin")- reset all players data
+<br/>* /wordle setlang (permission: "wordle.changelanguage) - set individual language for player
 
 <br/>**Placeholders:**
 <br/>
