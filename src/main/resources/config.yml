@@ -1,13 +1,13 @@
 #Avaible: [english, french, korean, spanish, polish]
 language: 'english'
-winMessage: "&aYou Won in &e %attempt &aattempts" # %attempt
-loseMessage: "&aYou lost"
+winMessage: "&aYou Won in &e %attemp &aattemp" # %attemp
+loseMessage: "&aYou lose"
 wrongWord: "&cWrong word"
 scoreboardTitle: "&aWordle"
-playedToday: "&cYou have already played today"
-startGame: "&aGame started, type '/wordle' again to pause game"
+playedToday: "&cYou have played today"
+startGame: "&aGame started, type one more time /wordle to pause game"
 pauseGame: "&aGame paused"
-cancelWord: "&cYou can't use this word in chat"
+cancelWord: "&cYou cant use this word on chat"
 giveReward: true
 reward:
   ITEM:
