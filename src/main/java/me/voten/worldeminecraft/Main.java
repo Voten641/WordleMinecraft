@@ -68,7 +68,7 @@ public final class Main extends JavaPlugin {
         }
         if(!langs.contains(lang)) {
             getServer().getLogger().log(Level.WARNING, "Lang: " + lang + " doesnt exist.");
-            getServer().getLogger().log(Level.WARNING, "Available langs: " + langs);
+            getServer().getLogger().log(Level.WARNING, "Available languages: " + langs);
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
