@@ -139,6 +139,10 @@ public class UserClass {
         wonGames = 0;
     }
 
+    public Integer getWonGames(){
+        return wonGames;
+    }
+
     public Integer getAttemp(){
         return attemp;
     }

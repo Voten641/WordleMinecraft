@@ -45,12 +45,12 @@ public class WordleCommand implements CommandExecutor {
             }
             if(args[0].equalsIgnoreCase("setlang") && args[1] != null){
                 if (!p.hasPermission("wordle.changelanguage"))return false;
-                if(Arrays.asList("english", "korean", "spanish", "french", "polish").contains(args[1])){
+                if(Arrays.asList("english", "korean", "spanish", "french", "polish", "italian").contains(args[1])){
                     p.sendMessage("lang changed");
                     UserClass.getByUUID(p.getUniqueId()).setLang(args[1]);
                     return true;
                 }else{
-                    p.sendMessage("§cAvailiable langs: english, korean, spanish, french, polish");
+                    p.sendMessage("§cAvailiable langs: english, korean, spanish, french, polish, italian");
                     return true;
                 }
             }

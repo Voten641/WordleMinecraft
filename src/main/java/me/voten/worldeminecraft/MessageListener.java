@@ -47,15 +47,16 @@ public class MessageListener implements Listener {
             end.append("§").append(uc.getColor(c)).append("§l[").append(c).append("]");
         }
         e.getPlayer().sendMessage(end.toString());
-        uc.addAttempt();
+        uc.addAttemp();
+        setSB(e.getPlayer());
         if(numberofgood == 5){
             uc.addWonGame();
-            e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("winMessage").replace('&', '§').replace("%attempt", uc.getAttempt()+""));
+            e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("winMessage").replace('&', '§').replace("%attempt", uc.getAttemp()+""));
             uc.resetAll();
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
             if(Main.getPlugin(Main.class).getConfig().getBoolean("giveReward")) giveRewards(e.getPlayer());
         }
-        if(uc.getAttempt() == 5){
+        if(uc.getAttemp() == 5){
             e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("loseMessage").replace('&', '§'));
             uc.resetAll();
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
@@ -66,7 +67,6 @@ public class MessageListener implements Listener {
     public static void setSB(Player p){
         ScoreboardManager m = Bukkit.getScoreboardManager();
         Scoreboard b = m.getNewScoreboard();
-
         Objective o = b.registerNewObjective("Gold", "");
         o.setDisplaySlot(DisplaySlot.SIDEBAR);
         o.setDisplayName(Main.getPlugin(Main.class).getConfig().getString("scoreboardTitle").replace('&', '§'));
@@ -93,27 +93,8 @@ public class MessageListener implements Listener {
         for( int i = 0; i < sc.size(); i++){
             sc.get(i).setScore(sc.size()-i);
         }
-
-<<<<<<< HEAD
         p.setScoreboard(b);
-=======
-        e.getPlayer().setScoreboard(b);
-        e.getPlayer().sendMessage(end.toString());
-        uc.addAttemp();
-        if(numberofgood == 5){
-            uc.addWonGame();
-            e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("winMessage").replace('&', '§').replace("%attemp", uc.getAttemp()+""));
-            uc.resetAll();
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
-            if(Main.getPlugin(Main.class).getConfig().getBoolean("giveReward")) giveRewards(e.getPlayer());
-        }
-        if(uc.getAttemp() == 5){
-            e.getPlayer().sendMessage(Main.getPlugin(Main.class).getConfig().getString("loseMessage").replace('&', '§'));
-            uc.resetAll();
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Main.getPlugin(Main.class), () -> e.getPlayer().setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard()), 20L*5);
-        }
-
->>>>>>> master
+        p.setScoreboard(b);
     }
 
     public void giveRewards(Player p) {
@@ -131,5 +112,6 @@ public class MessageListener implements Listener {
     public void onJoin(PlayerJoinEvent e){
         if(!UserClass.userByUuid.containsKey(e.getPlayer().getUniqueId()))
         new UserClass(e.getPlayer());
+        Main.sortTop();
     }
 }

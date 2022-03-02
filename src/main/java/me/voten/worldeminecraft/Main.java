@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public final class Main extends JavaPlugin {
 
@@ -19,6 +21,7 @@ public final class Main extends JavaPlugin {
     public static HashMap<String, List<String>> allwords = Maps.newHashMap();
     private static LocalDate day;
     public static String lang = "english";
+    public static HashMap<UUID, Integer> top = Maps.newHashMap();
 
     @Override
     public void onEnable() {
@@ -30,7 +33,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new MessageListener(), this);
         getCommand("wordle").setExecutor(new WordleCommand());
         lang = config.getString("language");
-        List<String> langs = Arrays.asList("english", "polish", "french", "korean", "spanish");
+        List<String> langs = Arrays.asList("english", "polish", "french", "korean", "spanish","italian");
         for(String s : langs){
             ArrayList<String> listOfLines = new ArrayList<>();
             InputStream in = getClass().getResourceAsStream("/WordList/" + s +".txt");
@@ -80,6 +83,24 @@ public final class Main extends JavaPlugin {
         }
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
             new PlaceholderClass(this).register();
+        }
+        sortTop();
+    }
+
+    public static void sortTop(){
+        File playerDataFolder = new File(Main.getPlugin(Main.class).getDataFolder(), "playerData");
+        HashMap<UUID, Integer> unsortedtop = Maps.newHashMap();
+        for(File f : playerDataFolder.listFiles()){
+            FileConfiguration fc = YamlConfiguration.loadConfiguration(f);
+            unsortedtop.put(UUID.fromString(f.getName().substring(0, f.getName().indexOf('.'))), fc.getInt("wonGames"));
+        }
+        top = unsortedtop.entrySet().stream()
+                .sorted(Map.Entry.<UUID, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+        for(int i = 0; i < top.size(); i++){
+            if(i>3){
+                top.remove(i);
+            }
         }
     }
 

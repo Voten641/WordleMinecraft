@@ -1,12 +1,13 @@
 package me.voten.worldeminecraft;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.util.Objects;
+import java.util.*;
 
 public class PlaceholderClass extends PlaceholderExpansion {
 
@@ -52,6 +53,20 @@ public class PlaceholderClass extends PlaceholderExpansion {
         if(params.equalsIgnoreCase("TodayWon")){
             if(UserClass.getByPlayer(player.getPlayer()) != null){
                 return String.valueOf(Objects.requireNonNull(UserClass.getByPlayer(player.getPlayer())).isTodayWon());
+            }
+        }
+        if(params.toUpperCase().contains("TOP_")){
+            Set<UUID> keySet = Main.top.keySet();
+            List<UUID> listKeys = new ArrayList<UUID>(keySet);
+            if(params.equalsIgnoreCase("top_1")){
+                if(listKeys.size() > 0) return Bukkit.getOfflinePlayer(listKeys.get(0)).getName();
+                else return "null";
+            }else if(params.equalsIgnoreCase("top_2")){
+                if(listKeys.size() > 1) return Bukkit.getOfflinePlayer(listKeys.get(1)).getName();
+                else return "null";
+            }else if(params.equalsIgnoreCase("top_3")){
+                if(listKeys.size() > 2) return Bukkit.getOfflinePlayer(listKeys.get(2)).getName();
+                else return "null";
             }
         }
         return null;
