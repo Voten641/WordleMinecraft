@@ -1,6 +1,6 @@
 #Avaible: [english, french, korean, spanish, polish]
 language: 'english'
-winMessage: "&aYou Won in &e %attemp &aattemp" # %attemp
+winMessage: "&aYou Won in &e %attempts &aattemps" # %attempts
 loseMessage: "&aYou lose"
 wrongWord: "&cWrong word"
 scoreboardTitle: "&aWordle"
